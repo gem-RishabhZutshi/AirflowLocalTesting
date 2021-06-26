@@ -29,17 +29,21 @@ wait_for_port "Redis" "$REDIS_HOST" "$REDIS_PORT"
 
 case "$1" in
   webserver)
-    airflow initdb
+    airflow db init
 		sleep 5
     exec airflow webserver
     ;;
-  worker|scheduler)
+  worker)
+    sleep 15
+    exec airflow celery "$@"
+    ;;
+  scheduler)
     sleep 15
     exec airflow "$@"
     ;;
   flower)
     sleep 15
-    exec airflow "$@"
+    exec airflow celery "$@"
     ;;
   version)
     exec airflow "$@"

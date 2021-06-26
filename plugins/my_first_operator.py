@@ -6,6 +6,7 @@ from airflow.utils.decorators import apply_defaults
 
 logger = logging.getLogger('airflow.my_first_operator')
 
+
 class MyFirstOperator(BaseOperator):
 
     @apply_defaults
@@ -16,6 +17,7 @@ class MyFirstOperator(BaseOperator):
     def execute(self, context):
         logger.info('Hello World!')
         logger.info('operator_param: %s', self.operator_param)
+
 
 class MyFirstPlugin(AirflowPlugin):
     name = 'my_first_plugin'
