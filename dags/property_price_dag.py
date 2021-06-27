@@ -4,34 +4,35 @@ https://github.com/apache/airflow/blob/master/airflow/example_dags/tutorial.py
 """
 
 from airflow import DAG
-from airflow.operators.python_operator import PythonVirtualenvOperator
+from airflow.operators.python_operator import PythonOperator
 from airflow.operators.dummy_operator import DummyOperator
 from datetime import datetime, timedelta
+
+from rightmove_webscraper import RightmoveData
+from pathlib import Path
+import logging
 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2021, 6, 9),
-    'email': ['airflow@example.com'],
+    'start_date': datetime(2021, 6, 27),
+    'email': ['shashank.personal@gmail.com'],
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 5,
-    'retry_delay': timedelta(minutes=5),
+    'retries': 10,
+    'retry_delay': timedelta(minutes=1),
     # 'queue': 'bash_queue',
     # 'pool': 'backfill',
     # 'priority_weight': 10,
     # 'end_date': datetime(2016, 1, 1),
     'schedule_interval': '@daily',
-    'concurrency': 1,
+    'concurrency': 2,
     'max_active_runs': 1,
     'schedule_after_task_execution': False,
 }
 
 
 def get_rightmove_prices_run(execution_date, region_code, **kwargs):
-    from rightmove_webscraper import RightmoveData
-    from pathlib import Path
-    import logging
     # region_code = kwargs['region_code']
 
     logging.info(" get_rightmove_prices_run")
@@ -67,16 +68,16 @@ with DAG('property_prices_dag', default_args=default_args) as dag:
     def group(number, **kwargs):
         # load the values if needed in the command you plan to execute
         dyn_value = "{{ task_instance.xcom_pull(task_ids='push_func') }}"
-        return PythonVirtualenvOperator(
+        return PythonOperator(
             task_id='get_rightmove_prices_{}'.format(number),
             python_callable=get_rightmove_prices_run,
-            requirements=["rightmove-webscraper", "requests==2.22.0", "pandas"],
-            system_site_packages=False,
+            # requirements=["rightmove-webscraper", "requests==2.22.0", "pandas"],
+            # system_site_packages=False,
             provide_context=True,
             op_kwargs={'execution_date': '{{ execution_date }}', 'region_code': number}, )
 
 
-    push_func = PythonVirtualenvOperator(
+    push_func = PythonOperator(
         task_id='push_func',
         provide_context=True,
         python_callable=all_region_code, )
