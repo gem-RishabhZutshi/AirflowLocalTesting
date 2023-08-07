@@ -174,6 +174,7 @@ RUN set -ex \
 
 
 COPY config/entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
 COPY dags ${AIRFLOW_HOME}/dags
