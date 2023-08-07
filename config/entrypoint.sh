@@ -28,7 +28,7 @@ wait_for_port "Postgres" "$POSTGRES_HOST" "$POSTGRES_PORT"
 wait_for_port "Redis" "$REDIS_HOST" "$REDIS_PORT"
 
 case "$1" in
-``all)
+  all)
     airflow db init
     airflow db upgrade
     sleep 5
