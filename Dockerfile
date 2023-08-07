@@ -43,6 +43,7 @@ RUN set -ex \
     ' \
     && apt-get update -yqq \
     && apt-get upgrade -yqq \
+    && apt-get install pkg-config \
     && apt-get install -yqq --no-install-recommends \
         ${buildDeps} \
         sudo \
