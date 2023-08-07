@@ -28,25 +28,16 @@ wait_for_port "Postgres" "$POSTGRES_HOST" "$POSTGRES_PORT"
 wait_for_port "Redis" "$REDIS_HOST" "$REDIS_PORT"
 
 case "$1" in
-  webserver)
+``all)
     airflow db init
-		sleep 5
-    exec airflow webserver
-    ;;
-  worker)
-    sleep 15
-    exec airflow celery "$@"
-    ;;
-  scheduler)
-    sleep 15
-    exec airflow "$@"
-    ;;
-  flower)
-    sleep 15
-    exec airflow celery "$@"
-    ;;
-  version)
-    exec airflow "$@"
+    airflow db upgrade
+    sleep 5
+    exec airflow webserver &         # Start webserver in the background
+    sleep 10                         # Give webserver some time to start
+    exec airflow worker &            # Start worker in the background
+    exec airflow scheduler &         # Start scheduler in the background
+    exec airflow celery flower &     # Start flower in the background
+    wait                            # Wait for all background processes to finish
     ;;
   *)
     exec "$@"
