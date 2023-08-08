@@ -195,3 +195,4 @@ WORKDIR ${AIRFLOW_HOME}
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["worker"]
 
+
