@@ -195,6 +195,6 @@ EXPOSE 8080 5555 8793
 
 WORKDIR ${AIRFLOW_HOME}
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["scheduler"]
+CMD ["webserver"]
 
 
