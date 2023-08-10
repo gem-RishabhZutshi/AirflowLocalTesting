@@ -74,7 +74,7 @@
         },
         "imageRegistryPassword": {
             "type": "string",
-            "defaultValue": "m8CBdzuSo1iYFlORPspT2qewDQUxdqPiSVN5QroR+b+ACRCilEma",
+            "defaultValue": "vvncWdJN0GBGq0+GJbzjK7hvDoDfRU1BDFLVtQaLT++ACRCHzknw",
             "metadata": {
                 "description": "password for acr."
             }
