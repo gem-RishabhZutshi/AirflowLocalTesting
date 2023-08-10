@@ -1,0 +1,372 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "containerGroupName": {
+            "type": "string",
+            "defaultValue": "Airflow-Dev-Container-Group",
+            "metadata": {
+                "description": "Container Group name."
+            }
+        },
+        "psqlHost": {
+            "type": "string",
+            "defaultValue": "airflow-devtest-postgres.postgres.database.azure.com",
+            "metadata": {
+                "description": "PostgreSQL host."
+            }
+        },
+        "psqlPort": {
+            "type": "string",
+            "defaultValue": "5432",
+            "metadata": {
+                "description": "PostgreSQL port."
+            }
+        },
+        "psqlDb": {
+            "type": "string",
+            "defaultValue": "airflow-devtest-postgres",
+            "metadata": {
+                "description": "PostgreSQL database name."
+            }
+        },
+        "psqlUser": {
+            "type": "string",
+            "defaultValue": "airflow",
+            "metadata": {
+                "description": "PostgreSQL user."
+            }
+        },
+        "psqlPassword": {
+            "type": "string",
+            "defaultValue": "Test@2022",
+            "metadata": {
+                "description": "PostgreSQL password."
+            }
+        },
+        "redisHost": {
+            "type": "string",
+            "defaultValue": "airflow-devtest-redis.redis.cache.windows.net",
+            "metadata": {
+                "description": "Redis host."
+            }
+        },
+        "redisPort": {
+            "type": "string",
+            "defaultValue": "6379",
+            "metadata": {
+                "description": "Redis port."
+            }
+        },
+        "imageRegistryLoginServer": {
+            "type": "string",
+            "defaultValue": "airflowdevtest.azurecr.io",
+            "metadata": {
+                "description": "login server for acr."
+            }
+        },
+        "imageRegistryUsername": {
+            "type": "string",
+            "defaultValue": "airflowdevtest",
+            "metadata": {
+                "description": "username for acr."
+            }
+        },
+        "imageRegistryPassword": {
+            "type": "string",
+            "defaultValue": "m8CBdzuSo1iYFlORPspT2qewDQUxdqPiSVN5QroR+b+ACRCilEma",
+            "metadata": {
+                "description": "password for acr."
+            }
+        }        
+    },
+    "variables": {
+        "container1name": "airflow-scheduler",
+        "container1image": "airflowdevtest.azurecr.io/scheduler:latest",
+        "container2name": "airflow-worker",
+        "container2image": "airflowdevtest.azurecr.io/worker:latest",
+        "container3name": "airflow-flower",
+        "container3image": "airflowdevtest.azurecr.io/flower:latest",
+        "container4name": "airflow-webserver",
+        "container4image": "airflowdevtest.azurecr.io/webserver:latest"
+    },
+    "resources": [
+        {
+            "name": "[parameters('containerGroupName')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-04-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[variables('container1name')]",
+                        "properties": {
+                            "image": "[variables('container1image')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": 1,
+                                    "memoryInGB": 1.5
+                                }
+                            },
+                            "command": [
+                                "scheduler"
+                            ],
+                            "environmentVariables": [
+                                {
+                                    "name": "POSTGRES_HOST",
+                                    "value": "[parameters('psqlHost')]"
+                                },
+                                {
+                                    "name": "POSTGRES_PORT",
+                                    "value": "[parameters('psqlPort')]"
+                                },
+                                {
+                                    "name": "POSTGRES_DB",
+                                    "value": "[parameters('psqlDb')]"
+                                },
+                                {
+                                    "name": "POSTGRES_USER",
+                                    "value": "[parameters('psqlUser')]"
+                                },
+                                {
+                                    "name": "POSTGRES_PASSWORD",
+                                    "value": "[parameters('psqlPassword')]"
+                                },
+                                {
+                                    "name": "REDIS_HOST",
+                                    "value": "[parameters('redisHost')]"
+                                },
+                                {
+                                    "name": "REDIS_PORT",
+                                    "value": "[parameters('redisPort')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_SERVER",
+                                    "value": "[parameters('imageRegistryLoginServer')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_USERNAME",
+                                    "value": "[parameters('imageRegistryUsername')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_PASSWORD",
+                                    "value": "[parameters('imageRegistryPassword')]"
+                                }
+                            ]  
+                        }
+                    },
+                    {
+                        "name": "[variables('container2name')]",
+                        "properties": {
+                            "image": "[variables('container2image')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": 1,
+                                    "memoryInGB": 1.5
+                                }
+                            },
+                            "command": [
+                                "worker"
+                            ],
+                            "ports": [
+                                {
+                                    "port": 8793
+                                }
+                            ],
+                            "environmentVariables": [
+                                {
+                                    "name": "POSTGRES_HOST",
+                                    "value": "[parameters('psqlHost')]"
+                                },
+                                {
+                                    "name": "POSTGRES_PORT",
+                                    "value": "[parameters('psqlPort')]"
+                                },
+                                {
+                                    "name": "POSTGRES_DB",
+                                    "value": "[parameters('psqlDb')]"
+                                },
+                                {
+                                    "name": "POSTGRES_USER",
+                                    "value": "[parameters('psqlUser')]"
+                                },
+                                {
+                                    "name": "POSTGRES_PASSWORD",
+                                    "value": "[parameters('psqlPassword')]"
+                                },
+                                {
+                                    "name": "REDIS_HOST",
+                                    "value": "[parameters('redisHost')]"
+                                },
+                                {
+                                    "name": "REDIS_PORT",
+                                    "value": "[parameters('redisPort')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_SERVER",
+                                    "value": "[parameters('imageRegistryLoginServer')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_USERNAME",
+                                    "value": "[parameters('imageRegistryUsername')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_PASSWORD",
+                                    "value": "[parameters('imageRegistryPassword')]"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "[variables('container3name')]",
+                        "properties": {
+                            "image": "[variables('container3image')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": 1,
+                                    "memoryInGB": 1.5
+                                }
+                            },
+                            "command": [
+                                "flower"
+                            ],
+                            "ports": [
+                                {
+                                    "port": 5555
+                                }
+                            ],
+                            "environmentVariables": [
+                                {
+                                    "name": "POSTGRES_HOST",
+                                    "value": "[parameters('psqlHost')]"
+                                },
+                                {
+                                    "name": "POSTGRES_PORT",
+                                    "value": "[parameters('psqlPort')]"
+                                },
+                                {
+                                    "name": "POSTGRES_DB",
+                                    "value": "[parameters('psqlDb')]"
+                                },
+                                {
+                                    "name": "POSTGRES_USER",
+                                    "value": "[parameters('psqlUser')]"
+                                },
+                                {
+                                    "name": "POSTGRES_PASSWORD",
+                                    "value": "[parameters('psqlPassword')]"
+                                },
+                                {
+                                    "name": "REDIS_HOST",
+                                    "value": "[parameters('redisHost')]"
+                                },
+                                {
+                                    "name": "REDIS_PORT",
+                                    "value": "[parameters('redisPort')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_SERVER",
+                                    "value": "[parameters('imageRegistryLoginServer')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_USERNAME",
+                                    "value": "[parameters('imageRegistryUsername')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_PASSWORD",
+                                    "value": "[parameters('imageRegistryPassword')]"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "[variables('container4name')]",
+                        "properties": {
+                            "image": "[variables('container4image')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": 1,
+                                    "memoryInGB": 1.5
+                                }
+                            },
+                            "command": [
+                                "webserver"
+                            ],
+                            "ports": [
+                                {
+                                    "port": 8080
+                                }
+                            ],
+                            "environmentVariables": [
+                                {
+                                    "name": "POSTGRES_HOST",
+                                    "value": "[parameters('psqlHost')]"
+                                },
+                                {
+                                    "name": "POSTGRES_PORT",
+                                    "value": "[parameters('psqlPort')]"
+                                },
+                                {
+                                    "name": "POSTGRES_DB",
+                                    "value": "[parameters('psqlDb')]"
+                                },
+                                {
+                                    "name": "POSTGRES_USER",
+                                    "value": "[parameters('psqlUser')]"
+                                },
+                                {
+                                    "name": "POSTGRES_PASSWORD",
+                                    "value": "[parameters('psqlPassword')]"
+                                },
+                                {
+                                    "name": "REDIS_HOST",
+                                    "value": "[parameters('redisHost')]"
+                                },
+                                {
+                                    "name": "REDIS_PORT",
+                                    "value": "[parameters('redisPort')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_SERVER",
+                                    "value": "[parameters('imageRegistryLoginServer')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_USERNAME",
+                                    "value": "[parameters('imageRegistryUsername')]"
+                                },
+                                {
+                                    "name": "ACR_REGISTRY_PASSWORD",
+                                    "value": "[parameters('imageRegistryPassword')]"
+                                }
+                            ]
+                        }
+                    }
+                ],    
+                "osType": "Linux",
+                "ipAddress": {
+                    "type": "Public",
+                    "ports": [
+                        {
+                            "protocol": "TCP",
+                            "port": 8793
+                        },
+                        {
+                            "protocol": "TCP",
+                            "port": 5555
+                        },
+                        {
+                            "protocol": "TCP",
+                            "port": 8080
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "containerIPv4Address": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups/', parameters('containerGroupName'))).ipAddress.ip]"
+        }
+    }
+}
