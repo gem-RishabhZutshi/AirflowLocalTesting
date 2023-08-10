@@ -4,7 +4,7 @@
     "parameters": {
         "containerGroupName": {
             "type": "string",
-            "defaultValue": "Airflow-Dev-Container-Group",
+            "defaultValue": "airflow-dev",
             "metadata": {
                 "description": "Container Group name."
             }
