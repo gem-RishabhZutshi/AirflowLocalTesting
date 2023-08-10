@@ -67,14 +67,14 @@
         },
         "imageRegistryUsername": {
             "type": "string",
-            "defaultValue": "airflowdevtest",
+            "defaultValue": "9b88a870-4a85-4b6d-9d82-3c8e9700787b",
             "metadata": {
                 "description": "username for acr."
             }
         },
         "imageRegistryPassword": {
             "type": "string",
-            "defaultValue": "vvncWdJN0GBGq0+GJbzjK7hvDoDfRU1BDFLVtQaLT++ACRCHzknw",
+            "defaultValue": "1em8Q~YVchaFC6H5KUO2VoCQnjfYobZmCFV1abaa",
             "metadata": {
                 "description": "password for acr."
             }
