@@ -81,15 +81,16 @@
         }        
     },
     "variables": {
-        "container1name": "airflow-scheduler",
-        "container1image": "airflowdevtest.azurecr.io/scheduler:latest",
-        "container2name": "airflow-worker",
-        "container2image": "airflowdevtest.azurecr.io/worker:latest",
-        "container3name": "airflow-flower",
-        "container3image": "airflowdevtest.azurecr.io/flower:latest",
-        "container4name": "airflow-webserver",
-        "container4image": "airflowdevtest.azurecr.io/webserver:latest"
-    },
+    "container1name": "airflow-scheduler",
+    "container1image": "[concat(parameters('imageRegistryLoginServer'), '/scheduler:latest')]",
+    "container2name": "airflow-worker",
+    "container2image": "[concat(parameters('imageRegistryLoginServer'), '/worker:latest')]",
+    "container3name": "airflow-flower",
+    "container3image": "[concat(parameters('imageRegistryLoginServer'), '/flower:latest')]",
+    "container4name": "airflow-webserver",
+    "container4image": "[concat(parameters('imageRegistryLoginServer'), '/webserver:latest')]",
+    "osType": "Linux"
+ },
     "resources": [
         {
             "name": "[parameters('containerGroupName')]",
