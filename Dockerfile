@@ -175,10 +175,10 @@ RUN set -ex \
         /usr/share/doc-base
 
 
-
+COPY config/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
-COPY dags ${AIRFLOW_HOME}/dags
-COPY plugins ${AIRFLOW_HOME}/plugins
+
 
 RUN chown -R airflow: ${AIRFLOW_HOME}
 
@@ -192,3 +192,4 @@ RUN pip install --user --no-cache-dir -r requirements.txt
 EXPOSE 8080 5555 8793
 
 WORKDIR ${AIRFLOW_HOME}
+ENTRYPOINT ["/entrypoint.sh"]
