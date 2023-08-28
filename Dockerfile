@@ -275,6 +275,7 @@ pip install --upgrade awscli
 COPY config/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
+COPY config/webserver_config.py ${AIRFLOW_HOME}/webserver_config.py
 
 RUN chown -R airflow: ${AIRFLOW_HOME}
 
