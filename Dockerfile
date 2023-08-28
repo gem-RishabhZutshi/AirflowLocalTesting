@@ -230,6 +230,7 @@ RUN set -ex \
         libpq-dev \
         git \
         gcc \
+        nano \
     ' \
     && apt-get update -yqq \
     && apt-get upgrade -yqq \
@@ -248,6 +249,7 @@ RUN set -ex \
         postgresql-client \
         gcc \
         git \
+        nano \
         cmake \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
