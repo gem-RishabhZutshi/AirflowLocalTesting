@@ -20,3 +20,7 @@ az acr login --name $ACR_NAME
 # tag and push image using latest
 docker tag $NAME $ECR_URL/$NAME:latest
 docker push $ECR_URL/$NAME:latest
+
+# deploy to aks cluster
+az aks get-credentials --resource-group Test --name airflowlocaltest
+kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:latest
