@@ -1,0 +1,27 @@
+name: Build and Deploy to AKS
+
+on:  workflow_dispatch
+ 
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: airflowlocaltestdev.azurecr.io
+          username: airflowlocaltestdev
+          password: /m20S6UQJefjxKSUGEOpa7mdPnXlE12JlnhZ82PkwY+ACRDO0JkM
+
+      - name: Deploy
+        run: |
+          bash ./scripts/deploy_azure.sh dev
