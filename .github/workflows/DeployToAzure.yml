@@ -22,6 +22,9 @@ jobs:
           username: airflowlocaltestdev
           password: /m20S6UQJefjxKSUGEOpa7mdPnXlE12JlnhZ82PkwY+ACRDO0JkM
 
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v1
+
       - name: Deploy
         run: |
           bash ./scripts/deploy_azure.sh dev
