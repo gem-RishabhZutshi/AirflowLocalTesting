@@ -21,9 +21,9 @@ az acr login --name $ACR_NAME
 docker tag $NAME $ECR_URL/$NAME:latest
 docker push $ECR_URL/$NAME:latest
 
-# deploy to aks cluster
-# az aks get-credentials --resource-group Test --name airflowlocaltest
-# kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:latest
-# kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:latest
-# kubectl set image deployment/airflow-worker airflow-worker=$ECR_URL/$NAME:latest
-# kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:latest
+#deploy to aks cluster
+az aks get-credentials --resource-group Test --name airflowlocaltest
+kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:latest
+kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:latest
+kubectl set image deployment/airflow-worker airflow-worker=$ECR_URL/$NAME:latest
+kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:latest
