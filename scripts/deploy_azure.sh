@@ -22,6 +22,7 @@ az acr login --name $ACR_NAME
 # docker push $ECR_URL/$NAME:latest
 
 #deploy to aks cluster
+az account set --subscription bb4f520e-74a1-4c5c-bfee-47bc81d17ece
 az aks get-credentials --resource-group Test --name airflowlocaltest
 
 # Add debugging information
