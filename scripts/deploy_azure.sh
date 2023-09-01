@@ -12,14 +12,14 @@ ECR_URL="$ACR_NAME.azurecr.io"
 COMMIT_HASH=`date +%Y%m%d%H%M%S`
 echo "COMMIT_HASH: $COMMIT_HASH"
 
-echo "Building image: $NAME:latest"
-docker build --rm -t $NAME:latest .
+# echo "Building image: $NAME:latest"
+# docker build --rm -t $NAME:latest .
 
 az acr login --name $ACR_NAME
 
 # tag and push image using latest
-docker tag $NAME $ECR_URL/$NAME:latest
-docker push $ECR_URL/$NAME:latest
+# docker tag $NAME $ECR_URL/$NAME:latest
+# docker push $ECR_URL/$NAME:latest
 
 #deploy to aks cluster
 az aks get-credentials --resource-group Test --name airflowlocaltest
