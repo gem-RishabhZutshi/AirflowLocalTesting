@@ -35,5 +35,5 @@ kubectl cluster-info
 kubectl get pods -o wide
 kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:latest
 kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:latest
-kubectl set image deployment/airflow-worker airflow-worker=$ECR_URL/$NAME:latest
+kubectl set image deploymentttt/airflow-worker airflow-worker=$ECR_URL/$NAME:latest
 kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:latest
