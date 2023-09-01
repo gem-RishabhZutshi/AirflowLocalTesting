@@ -23,6 +23,15 @@ docker push $ECR_URL/$NAME:latest
 
 #deploy to aks cluster
 az aks get-credentials --resource-group Test --name airflowlocaltest
+
+# Add debugging information
+echo "Current context:"
+kubectl config current-context
+
+echo "View cluster information:"
+kubectl cluster-info
+
+
 kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:latest
 kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:latest
 kubectl set image deployment/airflow-worker airflow-worker=$ECR_URL/$NAME:latest
