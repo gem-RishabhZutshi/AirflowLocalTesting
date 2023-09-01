@@ -20,7 +20,7 @@ jobs:
         with:
           login-server: airflowlocaltestdev.azurecr.io
           username: airflowlocaltestdev
-          password: /m20S6UQJefjxKSUGEOpa7mdPnXlE12JlnhZ82PkwY+ACRDO0JkM
+          password: qfw/7NszQ1yZvax0xmq3FFZrQs/qOg+g2UgdLnzr8d+ACRDOBt/M
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
