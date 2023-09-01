@@ -9,8 +9,8 @@ echo "Deploying webservice to Azure for $NAME"
 REGION=us-east
 ECR_URL="$ACR_NAME.azurecr.io"
 
-COMMIT_HASH=`date +%Y%m%d%H%M%S`
-echo "COMMIT_HASH: $COMMIT_HASH"
+# COMMIT_HASH=`date +%Y%m%d%H%M%S`
+# echo "COMMIT_HASH: $COMMIT_HASH"
 
 # echo "Building image: $NAME:latest"
 # docker build --rm -t $NAME:latest .
