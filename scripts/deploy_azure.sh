@@ -9,20 +9,19 @@ echo "Deploying webservice to Azure for $NAME"
 REGION=us-east
 ECR_URL="$ACR_NAME.azurecr.io"
 
-# COMMIT_HASH=`date +%Y%m%d%H%M%S`
-# echo "COMMIT_HASH: $COMMIT_HASH"
+COMMIT_HASH=`date +%Y%m%d%H%M%S`
+echo "COMMIT_HASH: $COMMIT_HASH"
 
-# echo "Building image: $NAME:latest"
-# docker build --rm -t $NAME:latest .
+echo "Building image: $NAME:latest"
+docker build --rm -t $NAME:latest .
 
 az acr login --name $ACR_NAME
 
-# tag and push image using latest
-# docker tag $NAME $ECR_URL/$NAME:latest
-# docker push $ECR_URL/$NAME:latest
+tag and push image using latest
+docker tag $NAME $ECR_URL/$NAME:latest
+docker push $ECR_URL/$NAME:latest
 
 #deploy to aks cluster
-az account set --subscription bb4f520e-74a1-4c5c-bfee-47bc81d17ece
 az aks get-credentials --resource-group Test --name airflowlocaltest
 
 # Add debugging information
@@ -32,8 +31,12 @@ kubectl config current-context
 echo "View cluster information:"
 kubectl cluster-info
 
-kubectl get pods -o wide
 kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:latest
 kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:latest
 kubectl set image deploymentttt/airflow-worker airflow-worker=$ECR_URL/$NAME:latest
 kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:latest
+
+kubectl rollout status deployment airflow-webserver
+kubectl rollout status deployment airflow-scheduler
+kubectl rollout status deployment airflow-worker
+kubectl rollout status deployment airflow-flower
