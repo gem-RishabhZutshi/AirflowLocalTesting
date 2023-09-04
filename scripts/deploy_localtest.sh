@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ENV=$1
-echo "Deploying airflow to $ENV"
+echo "Deploying webservice to $ENV"
 
 NAME=airflowlocaltest-$ENV
 ACR_NAME=airflowlocaltest$ENV
@@ -17,12 +17,8 @@ docker build --rm -t $NAME:$COMMIT_HASH .
 
 az acr login --name $ACR_NAME
 
-# List images and extract the digest for the "latest" tag
-# IMAGE_LIST=$(docker images --format "{{.Repository}}:{{.Tag}} {{.Digest}}" | grep "$NAME:latest")
-# echo "$IMAGE_LIST"
-
 # tag and push image using COMMIT_HASH
-docker tag $NAME $ECR_URL/$NAME:$COMMIT_HASH
+docker tag $NAME:$COMMIT_HASH $ECR_URL/$NAME:$COMMIT_HASH
 docker push $ECR_URL/$NAME:$COMMIT_HASH
 
 
