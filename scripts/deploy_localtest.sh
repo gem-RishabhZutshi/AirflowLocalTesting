@@ -15,7 +15,7 @@ docker build --rm -t $NAME:latest .
 az acr login --name $ACR_NAME
 
 # List images and extract the digest for the "latest" tag
-IMAGE_LIST=$(docker images --format "{{.Repository}}:{{.Tag}} {{.Digest}}")
+IMAGE_LIST=$(docker images --format "{{.Repository}}:{{.Tag}} {{.Digest}}" | grep "$NAME:latest")
 echo "$IMAGE_LIST"
 #SHA_ID=$(echo "$IMAGE_LIST" | awk '{print $2}')
 
