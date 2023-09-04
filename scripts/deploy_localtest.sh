@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ENV=$1
-echo "Deploying webservice to $ENV"
+echo "Deploying airflow to $ENV"
 
 NAME=airflowlocaltest-$ENV
 ACR_NAME=airflowlocaltest$ENV
@@ -9,15 +9,30 @@ echo "Deploying webservice to Azure for $NAME"
 REGION=us-east
 ECR_URL="$ACR_NAME.azurecr.io"
 
+COMMIT_HASH=`date +%Y%m%d%H%M%S`
+echo "COMMIT_HASH: $COMMIT_HASH"
+
 # Build the Docker image
-docker build --rm -t $NAME:latest .
+docker build --rm -t $NAME:$COMMIT_HASH .
 
 az acr login --name $ACR_NAME
 
 # List images and extract the digest for the "latest" tag
-IMAGE_LIST=$(docker images --format "{{.Repository}}:{{.Tag}} {{.Digest}}" | grep "$NAME:latest")
-echo "$IMAGE_LIST"
-#SHA_ID=$(echo "$IMAGE_LIST" | awk '{print $2}')
+# IMAGE_LIST=$(docker images --format "{{.Repository}}:{{.Tag}} {{.Digest}}" | grep "$NAME:latest")
+# echo "$IMAGE_LIST"
+
+# tag and push image using COMMIT_HASH
+docker tag $NAME $ECR_URL/$NAME:$COMMIT_HASH
+docker push $ECR_URL/$NAME:$COMMIT_HASH
+
+
+
+
+
+
+
+
+
 
 # # Tag the image with the SHA ID as the tag
 # docker tag $NAME:latest $ECR_URL/$NAME:$SHA_ID
