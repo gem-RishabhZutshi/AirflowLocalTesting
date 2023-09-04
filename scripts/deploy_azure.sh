@@ -17,7 +17,7 @@ docker build --rm -t $NAME:V2 .
 
 az acr login --name $ACR_NAME
 
-tag and push image using latest
+#tag and push image using latest
 docker tag $NAME $ECR_URL/$NAME:V2
 docker push $ECR_URL/$NAME:V2
 
