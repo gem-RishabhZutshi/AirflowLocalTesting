@@ -27,4 +27,4 @@ jobs:
 
       - name: Deploy
         run: |
-          bash ./scripts/deploy_azure.sh dev
+          bash ./scripts/deploy_localtest.sh dev
