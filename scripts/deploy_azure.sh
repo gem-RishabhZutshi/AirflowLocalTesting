@@ -63,33 +63,34 @@ docker build --rm -t $NAME:latest .
 
 az acr login --name $ACR_NAME
 
-# Get the SHA ID (digest) of the built image
-SHA_ID=$(docker inspect --format='{{index .RepoDigests 0}}' $NAME:latest)
+# Get the image digest (SHA ID)
+SHA_ID=$(docker image inspect --format='{{index .RepoDigests 0}}' $NAME:latest)
+echo "$SHA_ID"
 
 # Tag the image with the SHA ID as the tag
-docker tag $NAME:latest $ECR_URL/$NAME:$SHA_ID
+#docker tag $NAME:latest $ECR_URL/$NAME:$SHA_ID
 
 # Push the image to ACR
-docker push $ECR_URL/$NAME:$SHA_ID
+#docker push $ECR_URL/$NAME:$SHA_ID
 
 # Deploy to AKS cluster
-az aks get-credentials --resource-group Test --name airflowlocaltest
+#az aks get-credentials --resource-group Test --name airflowlocaltest
 
 # Add debugging information
-echo "Current context:"
-kubectl config current-context
+#echo "Current context:"
+#kubectl config current-context
 
-echo "View cluster information:"
-kubectl cluster-info
+#echo "View cluster information:"
+#kubectl cluster-info
 
 # Update the AKS deployment to use the newly tagged image
-kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:$SHA_ID
-kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:$SHA_ID
-kubectl set image deployment/airflow-worker airflow-worker=$ECR_URL/$NAME:$SHA_ID
-kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:$SHA_ID
+#kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:$SHA_ID
+#kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:$SHA_ID
+#kubectl set image deployment/airflow-worker airflow-worker=$ECR_URL/$NAME:$SHA_ID
+#kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:$SHA_ID
 
 # Monitor the deployment status
-kubectl rollout status deployment airflow-webserver
-kubectl rollout status deployment airflow-scheduler
-kubectl rollout status deployment airflow-worker
-kubectl rollout status deployment airflow-flower
+#kubectl rollout status deployment airflow-webserver
+#kubectl rollout status deployment airflow-scheduler
+#kubectl rollout status deployment airflow-worker
+#kubectl rollout status deployment airflow-flower
