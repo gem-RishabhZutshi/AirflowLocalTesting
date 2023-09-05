@@ -246,6 +246,7 @@ RUN set -ex \
         libpq-dev \
         git \
         gcc \
+        redis-tools \
         nano \
     ' \
     && apt-get update -yqq \
@@ -266,6 +267,7 @@ RUN set -ex \
         gcc \
         git \
         nano \
+        redis-tools \
         cmake \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
@@ -289,9 +291,7 @@ RUN set -ex \
 RUN pip install --upgrade pip && \
 pip install --upgrade awscli 
 
-RUN pip install redis
 
- 
 COPY config/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
