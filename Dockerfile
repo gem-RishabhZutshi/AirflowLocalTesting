@@ -246,7 +246,6 @@ RUN set -ex \
         libpq-dev \
         git \
         gcc \
-        redis-tools \
         nano \
     ' \
     && apt-get update -yqq \
@@ -267,7 +266,6 @@ RUN set -ex \
         gcc \
         git \
         nano \
-        redis-tools \
         cmake \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
@@ -281,11 +279,11 @@ RUN set -ex \
     && apt-get clean \
         /usr/share/doc-base
 
-# RUN mkdir -p /tmp/redis \
-#     && curl -L -o /tmp/redis/redis-cli https://github.com/redis/redis/raw/unstable/src/redis-cli \
-#     && chmod +x /tmp/redis/redis-cli \
-#     && mv /tmp/redis/redis-cli /usr/local/bin/ \
-#     && rm -rf /tmp/redis
+RUN mkdir -p /tmp/redis \
+    && curl -L -o /tmp/redis/redis-cli https://github.com/redis/redis/releases/latest/download/redis-cli \
+    && chmod +x /tmp/redis/redis-cli \
+    && mv /tmp/redis/redis-cli /usr/local/bin/ \
+    && rm -rf /tmp/redis
 
 
 RUN pip install --upgrade pip && \
