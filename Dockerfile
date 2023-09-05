@@ -279,16 +279,19 @@ RUN set -ex \
     && apt-get clean \
         /usr/share/doc-base
 
-RUN mkdir -p /tmp/redis \
-    && curl -L -o /tmp/redis/redis-cli https://github.com/redis/redis/raw/unstable/src/redis-cli \
-    && chmod +x /tmp/redis/redis-cli \
-    && mv /tmp/redis/redis-cli /usr/local/bin/ \
-    && rm -rf /tmp/redis
+# RUN mkdir -p /tmp/redis \
+#     && curl -L -o /tmp/redis/redis-cli https://github.com/redis/redis/raw/unstable/src/redis-cli \
+#     && chmod +x /tmp/redis/redis-cli \
+#     && mv /tmp/redis/redis-cli /usr/local/bin/ \
+#     && rm -rf /tmp/redis
 
 
 RUN pip install --upgrade pip && \
-pip install --upgrade awscli
+pip install --upgrade awscli 
 
+RUN pip install redis
+
+ 
 COPY config/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
