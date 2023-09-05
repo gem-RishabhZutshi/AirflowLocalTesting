@@ -200,7 +200,13 @@
 # BUILD: docker build --rm -t airflow .
 # ORIGINAL SOURCE: https://github.com/puckel/docker-airflow
 
-FROM python:3.11-slim
+
+    && rm -rf \
+        /var/lib/apt/lists/* \
+        /tmp/* \
+        /var/tmp/* \
+        /usr/share/man \
+        /usr/share/doc \FROM python:3.11-slim
 LABEL version="1.2"
 LABEL maintainer="discern"
 
@@ -261,13 +267,14 @@ RUN set -ex \
     && apt-get purge --auto-remove -yqq ${buildDeps} \
     && apt-get autoremove -yqq --purge \
     && apt-get clean \
-    && rm -rf \
-        /var/lib/apt/lists/* \
-        /tmp/* \
-        /var/tmp/* \
-        /usr/share/man \
-        /usr/share/doc \
         /usr/share/doc-base
+
+RUN mkdir -p /tmp/redis \
+    && curl -L -o /tmp/redis/redis-cli https://github.com/redis/redis/raw/unstable/src/redis-cli \
+    && chmod +x /tmp/redis/redis-cli \
+    && mv /tmp/redis/redis-cli /usr/local/bin/ \
+    && rm -rf /tmp/redis
+
 
 RUN pip install --upgrade pip && \
 pip install --upgrade awscli
