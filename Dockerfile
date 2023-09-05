@@ -201,12 +201,22 @@
 # ORIGINAL SOURCE: https://github.com/puckel/docker-airflow
 
 
-    && rm -rf \
-        /var/lib/apt/lists/* \
-        /tmp/* \
-        /var/tmp/* \
-        /usr/share/man \
-        /usr/share/doc \FROM python:3.11-slim
+    # && rm -rf \
+    #     /var/lib/apt/lists/* \
+    #     /tmp/* \
+    #     /var/tmp/* \
+    #     /usr/share/man \
+    #     /usr/share/doc \FROM python:3.11-slim
+
+
+
+
+
+
+
+
+
+FROM python:3.11-slim    
 LABEL version="1.2"
 LABEL maintainer="discern"
 
