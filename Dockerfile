@@ -246,6 +246,7 @@ RUN set -ex \
         libpq-dev \
         git \
         gcc \
+        redis-tools \
         nano \
     ' \
     && apt-get update -yqq \
@@ -266,6 +267,7 @@ RUN set -ex \
         gcc \
         git \
         nano \
+        redis-tools \
         cmake \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
@@ -274,16 +276,6 @@ RUN set -ex \
     && pip install -U pip setuptools==68.1.0 wheel \
     && pip install --no-cache-dir apache-airflow[async,aws,crypto,celery,github_enterprise,kubernetes,jdbc,postgres,password,s3,slack,ssh]==${AIRFLOW_VERSION} \
     && pip install --no-cache-dir cvxpy==1.3.2 \
-    && apt-get purge --auto-remove -yqq ${buildDeps} \
-    && apt-get autoremove -yqq --purge \
-    && apt-get clean \
-        /usr/share/doc-base
-
-RUN mkdir -p /tmp/redis \
-    && curl -L -o /tmp/redis/redis-cli https://github.com/redis/redis/releases/latest/download/redis-cli \
-    && chmod +x /tmp/redis/redis-cli \
-    && mv /tmp/redis/redis-cli /usr/local/bin/ \
-    && rm -rf /tmp/redis
 
 
 RUN pip install --upgrade pip && \
