@@ -275,7 +275,7 @@ RUN set -ex \
     && useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow \
     && pip install -U pip setuptools==68.1.0 wheel \
     && pip install --no-cache-dir apache-airflow[async,aws,crypto,celery,github_enterprise,kubernetes,jdbc,postgres,password,s3,slack,ssh]==${AIRFLOW_VERSION} \
-    && pip install --no-cache-dir cvxpy==1.3.2 \
+    && pip install --no-cache-dir cvxpy==1.3.2 
 
 
 RUN pip install --upgrade pip && \
