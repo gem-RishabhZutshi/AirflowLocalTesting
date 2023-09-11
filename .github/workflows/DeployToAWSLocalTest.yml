@@ -27,4 +27,4 @@ jobs:
 
       - name: Deploy
         run: |
-          bash ./scripts/deploy.sh airflow-dev
+          bash ./scripts/deploy_aws.sh airflow-dev
