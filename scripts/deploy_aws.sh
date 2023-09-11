@@ -7,7 +7,7 @@ CLUSTER="arn:aws:ecs:$REGION:$AWS_ACCOUNT:cluster/$NAME"
 COMMIT_HASH=`date +%Y%m%d%H%M%S`
 echo $COMMIT_HASH
 
-cp config/airflow_$AWS_ACCOUNT.cfg config/airflow.cfg
+
 
 echo "Building image: $NAME:latest"
 docker build --rm -t $NAME:latest .
