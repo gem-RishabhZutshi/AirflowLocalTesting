@@ -1,6 +1,6 @@
 NAME=$1
 AWS_ACCOUNT=${2:-791167451670}
-REGION=us-east-1
+REGION=ap-south-1
 ECR_URL="$AWS_ACCOUNT.dkr.ecr.$REGION.amazonaws.com"
 CLUSTER="arn:aws:ecs:$REGION:$AWS_ACCOUNT:cluster/$NAME"
 
