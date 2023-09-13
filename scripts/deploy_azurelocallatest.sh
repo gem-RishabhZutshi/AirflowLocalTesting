@@ -1,86 +1,44 @@
-FROM python:3.7-slim-buster
-LABEL maintainer="Puckel_"
+#!/bin/sh
 
-# Never prompt the user for choices on installation/configuration of packages
-ENV DEBIAN_FRONTEND noninteractive
-ENV TERM linux
+ENV=$1
+echo "Deploying webservice to $ENV"
 
-# Airflow
-ARG AIRFLOW_VERSION=1.10.9
-ARG AIRFLOW_USER_HOME=/usr/local/airflow
-ARG AIRFLOW_DEPS=""
-ARG PYTHON_DEPS=""
-ENV AIRFLOW_HOME=${AIRFLOW_USER_HOME}
+NAME=airflowlocaltest-$ENV
+ACR_NAME=airflowlocaltest$ENV
+echo "Deploying webservice to Azure for $NAME"
+REGION=us-east
+ECR_URL="$ACR_NAME.azurecr.io"
 
-# Define en_US.
-ENV LANGUAGE en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-ENV LC_CTYPE en_US.UTF-8
-ENV LC_MESSAGES en_US.UTF-8
+COMMIT_HASH=`date +%Y%m%d%H%M%S`
+echo "COMMIT_HASH: $COMMIT_HASH"
 
-RUN set -ex \
-    && buildDeps=' \
-        freetds-dev \
-        libkrb5-dev \
-        libsasl2-dev \
-        libssl-dev \
-        libffi-dev \
-        libpq-dev \
-        redis-tools \
-        git \
-    ' \
-    && apt-get update -yqq \
-    && apt-get upgrade -yqq \
-    && apt-get install -yqq --no-install-recommends \
-        $buildDeps \
-        freetds-bin \
-        build-essential \
-        default-libmysqlclient-dev \
-        apt-utils \
-        curl \
-        rsync \
-        netcat \
-        redis-tools \
-        locales \
-    && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
-    && locale-gen \
-    && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
-    && useradd -ms /bin/bash -d ${AIRFLOW_USER_HOME} airflow \
-    && pip install -U pip setuptools wheel \
-    && pip install pytz \
-    && pip install pyOpenSSL \
-    && pip install ndg-httpsclient \
-    && pip install pyasn1 \
-    && pip install apache-airflow[crypto,celery,postgres,hive,jdbc,mysql,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} \
-    && pip install markupsafe==2.0.1 \
-    && pip install 'redis==3.2' \
-    && pip install --upgrade WTForms \
-    && if [ -n "${PYTHON_DEPS}" ]; then pip install ${PYTHON_DEPS}; fi 
-    
+# Build the Docker image
+docker build --rm -t $NAME:$COMMIT_HASH .
 
-RUN pip install --upgrade pip && \
-pip install --upgrade awscli 
+az acr login --name $ACR_NAME
 
+# tag and push image using COMMIT_HASH
+docker tag $NAME:$COMMIT_HASH $ECR_URL/$NAME:$COMMIT_HASH
+docker push $ECR_URL/$NAME:$COMMIT_HASH
 
-COPY config/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
-COPY dags ${AIRFLOW_HOME}/dags
-COPY config/webserver_config.py ${AIRFLOW_HOME}/webserver_config.py
+# Deploy to AKS cluster
+az aks get-credentials --resource-group Test --name airflowlocaltest
 
-RUN chown -R airflow: ${AIRFLOW_HOME}
+# Add debugging information
+echo "Current context:"
+kubectl config current-context
 
-ENV PYTHONPATH ${AIRFLOW_HOME}
+echo "View cluster information:"
+kubectl cluster-info
 
-USER airflow
+# Update the AKS deployment to use the newly tagged image
+kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:$COMMIT_HASH
+kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:$COMMIT_HASH
+kubectl set image deployment/airflow-worker airflow-worker=$ECR_URL/$NAME:$COMMIT_HASH
+#kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:$COMMIT_HASH
 
-COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
-RUN mkdir ${AIRFLOW_HOME}/tmp
-
-
-EXPOSE 8080 5555 8793
-
-WORKDIR ${AIRFLOW_HOME}
-ENTRYPOINT ["/entrypoint.sh"]
+# Monitor the deployment status
+kubectl rollout status deployment airflow-webserver
+kubectl rollout status deployment airflow-scheduler
+kubectl rollout status deployment airflow-worker
+#kubectl rollout status deployment airflow-flower
