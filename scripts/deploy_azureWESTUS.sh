@@ -35,10 +35,10 @@ kubectl cluster-info
 kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:$COMMIT_HASH
 kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:$COMMIT_HASH
 kubectl set image deployment/airflow-worker airflow-worker=$ECR_URL/$NAME:$COMMIT_HASH
-kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:$COMMIT_HASH
+#kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:$COMMIT_HASH
 
 # Monitor the deployment status
 kubectl rollout status deployment airflow-webserver
 kubectl rollout status deployment airflow-scheduler
 kubectl rollout status deployment airflow-worker
-kubectl rollout status deployment airflow-flower
+#kubectl rollout status deployment airflow-flower
