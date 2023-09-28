@@ -151,21 +151,20 @@ RUN set -ex \
         cmake \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
+    && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
+    && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
-    && useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow \
-    && pip install -U pip setuptools==68.1.0 wheel \
-    && pip install --no-cache-dir apache-airflow[async,aws,crypto,celery,github_enterprise,kubernetes,jdbc,postgres,password,s3,slack,ssh]==${AIRFLOW_VERSION} \
-    && pip install --no-cache-dir cvxpy==1.3.2 \
-    && apt-get purge --auto-remove -yqq ${buildDeps} \
-    && apt-get autoremove -yqq --purge \
-    && apt-get clean \
-    && rm -rf \
-        /var/lib/apt/lists/* \
-        /tmp/* \
-        /var/tmp/* \
-        /usr/share/man \
-        /usr/share/doc \
-        /usr/share/doc-base
+    && useradd -ms /bin/bash -d ${AIRFLOW_USER_HOME} airflow \
+    && pip install -U pip setuptools wheel \
+    && pip install pytz \
+    && pip install pyOpenSSL \
+    && pip install ndg-httpsclient \
+    && pip install pyasn1 \
+    && pip install apache-airflow[crypto,celery,postgres,hive,jdbc,mysql,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} \
+    && pip install markupsafe==2.0.1 \
+    && pip install 'redis==3.2' \
+    && pip install --upgrade WTForms \
+    && if [ -n "${PYTHON_DEPS}" ]; then pip install ${PYTHON_DEPS}; fi 
 
 RUN pip install --upgrade pip && \
 pip install --upgrade awscli
