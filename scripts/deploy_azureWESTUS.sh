@@ -41,4 +41,4 @@ kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:$COMMI
 kubectl rollout status deployment airflow-webserver
 kubectl rollout status deployment airflow-scheduler
 kubectl rollout status deployment airflow-worker
-#kubectl rollout status deployment airflow-flower
+kubectl rollout status deployment airflow-flower
