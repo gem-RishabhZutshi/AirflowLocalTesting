@@ -21,24 +21,24 @@ az acr login --name $ACR_NAME
 docker tag $NAME:$COMMIT_HASH $ECR_URL/$NAME:$COMMIT_HASH
 docker push $ECR_URL/$NAME:$COMMIT_HASH
 
-# Deploy to AKS cluster
-az aks get-credentials --resource-group Test --name airflow-test-WESTUS
+# # Deploy to AKS cluster
+# az aks get-credentials --resource-group Test --name airflow-test-WESTUS
 
-# Add debugging information
-echo "Current context:"
-kubectl config current-context
+# # Add debugging information
+# echo "Current context:"
+# kubectl config current-context
 
-echo "View cluster information:"
-kubectl cluster-info
+# echo "View cluster information:"
+# kubectl cluster-info
 
-# Update the AKS deployment to use the newly tagged image
-kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:$COMMIT_HASH
-kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:$COMMIT_HASH
-kubectl set image deployment/airflow-worker airflow-worker=$ECR_URL/$NAME:$COMMIT_HASH
-#kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:$COMMIT_HASH
+# # Update the AKS deployment to use the newly tagged image
+# kubectl set image deployment/airflow-webserver airflow-webserver=$ECR_URL/$NAME:$COMMIT_HASH
+# kubectl set image deployment/airflow-scheduler airflow-scheduler=$ECR_URL/$NAME:$COMMIT_HASH
+# kubectl set image deployment/airflow-worker airflow-worker=$ECR_URL/$NAME:$COMMIT_HASH
+# #kubectl set image deployment/airflow-flower airflow-flower=$ECR_URL/$NAME:$COMMIT_HASH
 
-# Monitor the deployment status
-kubectl rollout status deployment airflow-webserver
-kubectl rollout status deployment airflow-scheduler
-kubectl rollout status deployment airflow-worker
-#kubectl rollout status deployment airflow-flower
+# # Monitor the deployment status
+# kubectl rollout status deployment airflow-webserver
+# kubectl rollout status deployment airflow-scheduler
+# kubectl rollout status deployment airflow-worker
+# #kubectl rollout status deployment airflow-flower
