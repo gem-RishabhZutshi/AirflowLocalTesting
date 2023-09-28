@@ -18,13 +18,13 @@ jobs:
       - name: 'Build and push image'
         uses: azure/docker-login@v1
         with:
-          login-server: airflowwestustestdev.azurecr.io
-          username: airflowWestUSTestDev
-          password: /omP2Bg55tKlBv7fUb0Ah03oZAAdVRhn/VF9uHlTdi+ACRDX4k9Q
+          login-server: airflowtestwestusdev.azurecr.io
+          username: airflowtestwestusdev
+          password: sz9acytPPJ0lbS3F59Xh6+jvO0jIKDfWwBatT0/EOL+ACRC4eVtB
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
 
       - name: Deploy
         run: |
-          bash ./scripts/deploy_azurelocallatest.sh dev
+          bash ./scripts/deploy_azureWESTUS.sh dev
