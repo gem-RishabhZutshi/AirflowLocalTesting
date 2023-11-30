@@ -1,1 +1,1 @@
-AUTH_ROLE_PUBLIC = "Public"
+AUTH_ROLE_PUBLIC = "Admin"
