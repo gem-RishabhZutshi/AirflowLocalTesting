@@ -10,12 +10,3 @@ print(f"Current env: {env}")
 print(f"CLIENT_ID: {CLIENT_ID}")
 print(f"CLIENT_SECRET: {CLIENT_SECRET}")
 print(f"TENANT_ID: {TENANT_ID}")
-
-if env != "local":
-    os.unsetenv("CLIENT_ID")
-    os.unsetenv("CLIENT_SECRET")
-    os.unsetenv("TENANT_ID")
-
-print(f"CLIENT_ID: {CLIENT_ID}")
-print(f"CLIENT_SECRET: {CLIENT_SECRET}")
-print(f"TENANT_ID: {TENANT_ID}")
